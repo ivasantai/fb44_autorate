@@ -1,0 +1,471 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Def_03_moderation" targetNamespace="https://autorate.example/bpmn" exporter="AutoRate QA BPMN XML" exporterVersion="1.0">
+  <bpmn:documentation>Продукт: АвтоРейт (П5). Спринт: 1. Дата підготовки: 16.09.2026. Команда: AutoRate QA.
+Автори: Асташов Іван, Кінаш Єгор, Рушай Євген, Дарина Поломарьова.
+Модерація коментарів</bpmn:documentation>
+  <bpmn:collaboration id="Coll_03_moderation">
+    <bpmn:participant id="P3_Auto" name="АвтоРейт" processRef="Proc_P3_Auto" />
+    <bpmn:participant id="P3_User" name="Користувач" />
+    <bpmn:messageFlow id="03_moderation_M01" name="Скарга" sourceRef="P3_User" targetRef="M02" />
+    <bpmn:messageFlow id="03_moderation_M02" name="Попередження" sourceRef="M10" targetRef="P3_User" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_P3_Auto" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P3_Auto">
+      <bpmn:lane id="L3_Mod" name="Модератор">
+        <bpmn:flowNodeRef>M01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M06</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L3_System" name="Система">
+        <bpmn:flowNodeRef>M07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M09</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M25</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M26</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>M27</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="M01" name="Новий коментар у черзі">
+      <bpmn:outgoing>03_moderation_F01</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="M01_Message" />
+    </bpmn:startEvent>
+    <bpmn:startEvent id="M02" name="Скаргу отримано">
+      <bpmn:outgoing>03_moderation_F02</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="M02_Message" />
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="M03" name="Звернення отримано" gatewayDirection="Converging">
+      <bpmn:incoming>03_moderation_F01</bpmn:incoming>
+      <bpmn:incoming>03_moderation_F02</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F03</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="M04" name="Відкрити чергу коментарів">
+      <bpmn:incoming>03_moderation_F03</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F04</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M05" name="Прочитати коментар">
+      <bpmn:documentation>Модератор читає текст і фіксує одне рішення; M06 лише маршрутизує вже обраний результат.</bpmn:documentation>
+      <bpmn:incoming>03_moderation_F04</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F05</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="M06" name="Яке рішення?" gatewayDirection="Diverging">
+      <bpmn:incoming>03_moderation_F05</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F09</bpmn:outgoing>
+      <bpmn:outgoing>03_moderation_F10</bpmn:outgoing>
+      <bpmn:outgoing>03_moderation_F11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="M07" name="Схвалити коментар">
+      <bpmn:incoming>03_moderation_F09</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M08" name="Приховати коментар">
+      <bpmn:incoming>03_moderation_F10</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M09" name="Видалити коментар">
+      <bpmn:outgoing>03_moderation_F06</bpmn:outgoing>
+      <bpmn:incoming>03_moderation_F11</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sendTask id="M10" name="Надіслати попередження користувачу">
+      <bpmn:incoming>03_moderation_F06</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F07</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:task id="M11" name="Перевірити повторність порушення">
+      <bpmn:incoming>03_moderation_F07</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F08</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="M12" name="Порушення повторне?" gatewayDirection="Diverging">
+      <bpmn:incoming>03_moderation_F08</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F16</bpmn:outgoing>
+      <bpmn:outgoing>03_moderation_F18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="M13" name="Заблокувати користувача">
+      <bpmn:incoming>03_moderation_F18</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F19</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M15" name="Записати видалення в журнал">
+      <bpmn:incoming>03_moderation_F16</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F17</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="M17" name="Схвалено">
+      <bpmn:incoming>03_moderation_F13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="M18" name="Приховано">
+      <bpmn:incoming>03_moderation_F15</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="M19" name="Видалено з попередженням">
+      <bpmn:incoming>03_moderation_F17</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="M20" name="Користувача заблоковано">
+      <bpmn:incoming>03_moderation_F20</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:dataObject id="M21_Object" />
+    <bpmn:dataObjectReference id="M21" name="Коментар або скарга" dataObjectRef="M21_Object" />
+    <bpmn:dataStoreReference id="M22" name="Журнал модерації" dataStoreRef="M22_Store" />
+    <bpmn:textAnnotation id="M23">
+      <bpmn:text>Рішення приймає модератор. Репутація біля коментаря - вимога нової функції US-14.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="M24">
+      <bpmn:text>При видаленні надсилається попередження. За повторне порушення користувача блокують.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:task id="M25" name="Записати схвалення в журнал">
+      <bpmn:incoming>03_moderation_F12</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M26" name="Записати приховування в журнал">
+      <bpmn:incoming>03_moderation_F14</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F15</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="M27" name="Записати блокування в журнал">
+      <bpmn:incoming>03_moderation_F19</bpmn:incoming>
+      <bpmn:outgoing>03_moderation_F20</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="03_moderation_F01" sourceRef="M01" targetRef="M03" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F02" sourceRef="M02" targetRef="M03" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F03" sourceRef="M03" targetRef="M04" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F04" sourceRef="M04" targetRef="M05" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F05" sourceRef="M05" targetRef="M06" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F06" sourceRef="M09" targetRef="M10" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F07" sourceRef="M10" targetRef="M11" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F08" sourceRef="M11" targetRef="M12" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F09" sourceRef="M06" targetRef="M07" name="Схвалити">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Схвалити</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="03_moderation_F10" sourceRef="M06" targetRef="M08" name="Приховати">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Приховати</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="03_moderation_F11" sourceRef="M06" targetRef="M09" name="Видалити">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Видалити</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="03_moderation_F12" sourceRef="M07" targetRef="M25" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F13" sourceRef="M25" targetRef="M17" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F14" sourceRef="M08" targetRef="M26" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F15" sourceRef="M26" targetRef="M18" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F16" sourceRef="M12" targetRef="M15" name="Ні">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Ні</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="03_moderation_F17" sourceRef="M15" targetRef="M19" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F18" sourceRef="M12" targetRef="M13" name="Так">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Так</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="03_moderation_F19" sourceRef="M13" targetRef="M27" name="" />
+    <bpmn:sequenceFlow id="03_moderation_F20" sourceRef="M27" targetRef="M20" name="" />
+    <bpmn:association id="03_moderation_A01" sourceRef="M05" targetRef="M21" associationDirection="None" />
+    <bpmn:association id="03_moderation_A02" sourceRef="M23" targetRef="M05" associationDirection="None" />
+    <bpmn:association id="03_moderation_A03" sourceRef="M24" targetRef="M10" associationDirection="None" />
+    <bpmn:association id="03_moderation_A04" sourceRef="M25" targetRef="M22" associationDirection="None" />
+    <bpmn:association id="03_moderation_A05" sourceRef="M26" targetRef="M22" associationDirection="None" />
+    <bpmn:association id="03_moderation_A06" sourceRef="M15" targetRef="M22" associationDirection="None" />
+    <bpmn:association id="03_moderation_A07" sourceRef="M27" targetRef="M22" associationDirection="None" />
+  </bpmn:process>
+  <bpmn:dataStore id="M22_Store" name="Журнал модерації" />
+  <bpmndi:BPMNDiagram id="Diagram_03_moderation">
+    <bpmndi:BPMNPlane id="Plane_03_moderation" bpmnElement="Coll_03_moderation">
+      <bpmndi:BPMNShape id="P3_Auto_DI" bpmnElement="P3_Auto" isHorizontal="true">
+        <dc:Bounds x="20" y="70" width="2450" height="980" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L3_Mod_DI" bpmnElement="L3_Mod" isHorizontal="true">
+        <dc:Bounds x="50" y="70" width="2420" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L3_System_DI" bpmnElement="L3_System" isHorizontal="true">
+        <dc:Bounds x="50" y="410" width="2420" height="640" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P3_User_DI" bpmnElement="P3_User" isHorizontal="true">
+        <dc:Bounds x="20" y="1100" width="2450" height="112" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M01_DI" bpmnElement="M01">
+        <dc:Bounds x="125" y="125" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="173" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M02_DI" bpmnElement="M02">
+        <dc:Bounds x="125" y="285" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="333" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M03_DI" bpmnElement="M03">
+        <dc:Bounds x="320" y="199" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="266.0" y="259" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M04_DI" bpmnElement="M04">
+        <dc:Bounds x="490" y="182" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M05_DI" bpmnElement="M05">
+        <dc:Bounds x="740" y="182" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M06_DI" bpmnElement="M06">
+        <dc:Bounds x="995" y="199" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="941.0" y="259" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M07_DI" bpmnElement="M07">
+        <dc:Bounds x="1170" y="455" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M08_DI" bpmnElement="M08">
+        <dc:Bounds x="1170" y="650" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M09_DI" bpmnElement="M09">
+        <dc:Bounds x="1170" y="855" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M10_DI" bpmnElement="M10">
+        <dc:Bounds x="1400" y="855" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M11_DI" bpmnElement="M11">
+        <dc:Bounds x="1630" y="855" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M12_DI" bpmnElement="M12">
+        <dc:Bounds x="1880" y="872" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1826.0" y="932" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M13_DI" bpmnElement="M13">
+        <dc:Bounds x="2070" y="620" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M15_DI" bpmnElement="M15">
+        <dc:Bounds x="2070" y="855" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M17_DI" bpmnElement="M17">
+        <dc:Bounds x="1690" y="478" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1636.0" y="526" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M18_DI" bpmnElement="M18">
+        <dc:Bounds x="1690" y="673" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1636.0" y="721" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M19_DI" bpmnElement="M19">
+        <dc:Bounds x="2290" y="878" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2236.0" y="926" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M20_DI" bpmnElement="M20">
+        <dc:Bounds x="2290" y="453" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2236.0" y="501" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M21_DI" bpmnElement="M21">
+        <dc:Bounds x="180" y="490" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="126.0" y="564" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M22_DI" bpmnElement="M22">
+        <dc:Bounds x="760" y="680" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="706.0" y="754" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M23_DI" bpmnElement="M23">
+        <dc:Bounds x="1300" y="190" width="480" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M24_DI" bpmnElement="M24">
+        <dc:Bounds x="125" y="865" width="540" height="86" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M25_DI" bpmnElement="M25">
+        <dc:Bounds x="1450" y="455" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M26_DI" bpmnElement="M26">
+        <dc:Bounds x="1450" y="650" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="M27_DI" bpmnElement="M27">
+        <dc:Bounds x="2070" y="430" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="03_moderation_F01_DI" bpmnElement="03_moderation_F01">
+        <di:waypoint x="169" y="147.0" />
+        <di:waypoint x="244.5" y="147.0" />
+        <di:waypoint x="244.5" y="227.0" />
+        <di:waypoint x="320" y="227.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F02_DI" bpmnElement="03_moderation_F02">
+        <di:waypoint x="169" y="307.0" />
+        <di:waypoint x="244.5" y="307.0" />
+        <di:waypoint x="244.5" y="227.0" />
+        <di:waypoint x="320" y="227.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F03_DI" bpmnElement="03_moderation_F03">
+        <di:waypoint x="376" y="227.0" />
+        <di:waypoint x="490" y="227.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F04_DI" bpmnElement="03_moderation_F04">
+        <di:waypoint x="660" y="227.0" />
+        <di:waypoint x="740" y="227.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F05_DI" bpmnElement="03_moderation_F05">
+        <di:waypoint x="910" y="227.0" />
+        <di:waypoint x="995" y="227.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F06_DI" bpmnElement="03_moderation_F06">
+        <di:waypoint x="1340" y="900.0" />
+        <di:waypoint x="1400" y="900.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F07_DI" bpmnElement="03_moderation_F07">
+        <di:waypoint x="1570" y="900.0" />
+        <di:waypoint x="1630" y="900.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F08_DI" bpmnElement="03_moderation_F08">
+        <di:waypoint x="1800" y="900.0" />
+        <di:waypoint x="1880" y="900.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F09_DI" bpmnElement="03_moderation_F09">
+        <di:waypoint x="1051" y="227" />
+        <di:waypoint x="1100" y="227" />
+        <di:waypoint x="1100" y="500" />
+        <di:waypoint x="1170" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="940" y="325" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F10_DI" bpmnElement="03_moderation_F10">
+        <di:waypoint x="1023" y="255" />
+        <di:waypoint x="1023" y="695" />
+        <di:waypoint x="1170" y="695" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="910" y="600" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F11_DI" bpmnElement="03_moderation_F11">
+        <di:waypoint x="995" y="227" />
+        <di:waypoint x="940" y="227" />
+        <di:waypoint x="940" y="900" />
+        <di:waypoint x="1170" y="900" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="825" y="800" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F12_DI" bpmnElement="03_moderation_F12">
+        <di:waypoint x="1340" y="500.0" />
+        <di:waypoint x="1450" y="500.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F13_DI" bpmnElement="03_moderation_F13">
+        <di:waypoint x="1620" y="500.0" />
+        <di:waypoint x="1690" y="500.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F14_DI" bpmnElement="03_moderation_F14">
+        <di:waypoint x="1340" y="695.0" />
+        <di:waypoint x="1450" y="695.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F15_DI" bpmnElement="03_moderation_F15">
+        <di:waypoint x="1620" y="695.0" />
+        <di:waypoint x="1690" y="695.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F16_DI" bpmnElement="03_moderation_F16">
+        <di:waypoint x="1936" y="900.0" />
+        <di:waypoint x="2070" y="900.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1883.0" y="871.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F17_DI" bpmnElement="03_moderation_F17">
+        <di:waypoint x="2240" y="900.0" />
+        <di:waypoint x="2290" y="900.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F18_DI" bpmnElement="03_moderation_F18">
+        <di:waypoint x="1908" y="872" />
+        <di:waypoint x="1908" y="665" />
+        <di:waypoint x="2070" y="665" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1810" y="740" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F19_DI" bpmnElement="03_moderation_F19">
+        <di:waypoint x="2155.0" y="620" />
+        <di:waypoint x="2155.0" y="570.0" />
+        <di:waypoint x="2155.0" y="570.0" />
+        <di:waypoint x="2155.0" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_F20_DI" bpmnElement="03_moderation_F20">
+        <di:waypoint x="2240" y="475.0" />
+        <di:waypoint x="2290" y="475.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_M01_DI" bpmnElement="03_moderation_M01">
+        <di:waypoint x="100" y="1100" />
+        <di:waypoint x="100" y="1070" />
+        <di:waypoint x="680" y="1070" />
+        <di:waypoint x="680" y="340" />
+        <di:waypoint x="240" y="340" />
+        <di:waypoint x="240" y="270" />
+        <di:waypoint x="147" y="270" />
+        <di:waypoint x="147" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="-20.0" y="1056.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_M02_DI" bpmnElement="03_moderation_M02">
+        <di:waypoint x="1485" y="945" />
+        <di:waypoint x="1485" y="1100" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1365.0" y="993.5" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A01_DI" bpmnElement="03_moderation_A01">
+        <di:waypoint x="825" y="272" />
+        <di:waypoint x="825" y="365" />
+        <di:waypoint x="209" y="365" />
+        <di:waypoint x="209" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A02_DI" bpmnElement="03_moderation_A02">
+        <di:waypoint x="1300" y="190" />
+        <di:waypoint x="1240" y="190" />
+        <di:waypoint x="1240" y="110" />
+        <di:waypoint x="825" y="110" />
+        <di:waypoint x="825" y="182" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A03_DI" bpmnElement="03_moderation_A03">
+        <di:waypoint x="665" y="908" />
+        <di:waypoint x="710" y="908" />
+        <di:waypoint x="710" y="990" />
+        <di:waypoint x="1485" y="990" />
+        <di:waypoint x="1485" y="945" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A04_DI" bpmnElement="03_moderation_A04">
+        <di:waypoint x="1535" y="545" />
+        <di:waypoint x="1535" y="580" />
+        <di:waypoint x="789" y="580" />
+        <di:waypoint x="789" y="680" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A05_DI" bpmnElement="03_moderation_A05">
+        <di:waypoint x="1535" y="740" />
+        <di:waypoint x="1535" y="775" />
+        <di:waypoint x="900" y="775" />
+        <di:waypoint x="900" y="715" />
+        <di:waypoint x="818" y="715" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A06_DI" bpmnElement="03_moderation_A06">
+        <di:waypoint x="2155" y="945" />
+        <di:waypoint x="2155" y="1005" />
+        <di:waypoint x="900" y="1005" />
+        <di:waypoint x="900" y="715" />
+        <di:waypoint x="818" y="715" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="03_moderation_A07_DI" bpmnElement="03_moderation_A07">
+        <di:waypoint x="2155" y="430" />
+        <di:waypoint x="2155" y="400" />
+        <di:waypoint x="900" y="400" />
+        <di:waypoint x="900" y="715" />
+        <di:waypoint x="818" y="715" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

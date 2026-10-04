@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Def_subprocess_rating_recalculation" targetNamespace="https://autorate.example/bpmn" exporter="AutoRate QA BPMN XML" exporterVersion="1.0">
+  <bpmn:documentation>Продукт: АвтоРейт (П5). Спринт: 1. Дата підготовки: 16.09.2026. Команда: AutoRate QA.
+Автори: Асташов Іван, Кінаш Єгор, Рушай Євген, Дарина Поломарьова.
+Перерахунок рейтингу моделі і марки</bpmn:documentation>
+  <bpmn:collaboration id="Coll_subprocess_rating_recalculation">
+    <bpmn:participant id="P_subprocess_rating_recalculation" name="АвтоРейт" processRef="Proc_P_subprocess_rating_recalculation" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_P_subprocess_rating_recalculation" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P_subprocess_rating_recalculation">
+      <bpmn:lane id="L_subprocess_rating_recalculation" name="Система">
+        <bpmn:flowNodeRef>SubStart_subprocess_rating_recalculation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubTask1_subprocess_rating_recalculation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubTask2_subprocess_rating_recalculation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubEnd_subprocess_rating_recalculation</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="SubStart_subprocess_rating_recalculation" name="Перерахунок розпочато">
+      <bpmn:outgoing>subprocess_rating_recalculation_F01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="SubTask1_subprocess_rating_recalculation" name="Перерахувати рейтинг моделі">
+      <bpmn:incoming>subprocess_rating_recalculation_F01</bpmn:incoming>
+      <bpmn:outgoing>subprocess_rating_recalculation_F02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="SubTask2_subprocess_rating_recalculation" name="Перерахувати рейтинг марки">
+      <bpmn:incoming>subprocess_rating_recalculation_F02</bpmn:incoming>
+      <bpmn:outgoing>subprocess_rating_recalculation_F03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="SubEnd_subprocess_rating_recalculation" name="Рейтинги оновлено">
+      <bpmn:incoming>subprocess_rating_recalculation_F03</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="subprocess_rating_recalculation_F01" sourceRef="SubStart_subprocess_rating_recalculation" targetRef="SubTask1_subprocess_rating_recalculation" name="" />
+    <bpmn:sequenceFlow id="subprocess_rating_recalculation_F02" sourceRef="SubTask1_subprocess_rating_recalculation" targetRef="SubTask2_subprocess_rating_recalculation" name="" />
+    <bpmn:sequenceFlow id="subprocess_rating_recalculation_F03" sourceRef="SubTask2_subprocess_rating_recalculation" targetRef="SubEnd_subprocess_rating_recalculation" name="" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_subprocess_rating_recalculation">
+    <bpmndi:BPMNPlane id="Plane_subprocess_rating_recalculation" bpmnElement="Coll_subprocess_rating_recalculation">
+      <bpmndi:BPMNShape id="P_subprocess_rating_recalculation_DI" bpmnElement="P_subprocess_rating_recalculation" isHorizontal="true">
+        <dc:Bounds x="20" y="70" width="1080" height="215" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L_subprocess_rating_recalculation_DI" bpmnElement="L_subprocess_rating_recalculation" isHorizontal="true">
+        <dc:Bounds x="50" y="70" width="1050" height="215" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubStart_subprocess_rating_recalculation_DI" bpmnElement="SubStart_subprocess_rating_recalculation">
+        <dc:Bounds x="125" y="143" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="191" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubTask1_subprocess_rating_recalculation_DI" bpmnElement="SubTask1_subprocess_rating_recalculation">
+        <dc:Bounds x="250" y="120" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubTask2_subprocess_rating_recalculation_DI" bpmnElement="SubTask2_subprocess_rating_recalculation">
+        <dc:Bounds x="490" y="120" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubEnd_subprocess_rating_recalculation_DI" bpmnElement="SubEnd_subprocess_rating_recalculation">
+        <dc:Bounds x="985" y="143" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="931.0" y="191" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="subprocess_rating_recalculation_F01_DI" bpmnElement="subprocess_rating_recalculation_F01">
+        <di:waypoint x="169" y="165.0" />
+        <di:waypoint x="250" y="165.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="subprocess_rating_recalculation_F02_DI" bpmnElement="subprocess_rating_recalculation_F02">
+        <di:waypoint x="420" y="165.0" />
+        <di:waypoint x="490" y="165.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="subprocess_rating_recalculation_F03_DI" bpmnElement="subprocess_rating_recalculation_F03">
+        <di:waypoint x="660" y="165.0" />
+        <di:waypoint x="985" y="165.0" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,728 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Def_02_voting" targetNamespace="https://autorate.example/bpmn" exporter="AutoRate QA BPMN XML" exporterVersion="1.0">
+  <bpmn:documentation>Продукт: АвтоРейт (П5). Спринт: 1. Дата підготовки: 16.09.2026. Команда: AutoRate QA.
+Автори: Асташов Іван, Кінаш Єгор, Рушай Євген, Дарина Поломарьова.
+Голосування за модель</bpmn:documentation>
+  <bpmn:collaboration id="Coll_02_voting">
+    <bpmn:participant id="P2_User" name="Користувач" processRef="Proc_P2_User" />
+    <bpmn:participant id="P2_Auto" name="АвтоРейт" processRef="Proc_P2_Auto" />
+    <bpmn:participant id="P2_Mod" name="Модератор" />
+    <bpmn:messageFlow id="02_voting_M01" name="Запит" sourceRef="V02" targetRef="V15" />
+    <bpmn:messageFlow id="02_voting_M02" name="Дозвіл" sourceRef="V20" targetRef="V04" />
+    <bpmn:messageFlow id="02_voting_M03" name="Не авторизовано" sourceRef="V30" targetRef="V09" />
+    <bpmn:messageFlow id="02_voting_M04" name="Повторний голос" sourceRef="V31" targetRef="V11" />
+    <bpmn:messageFlow id="02_voting_M05" name="Оцінка і коментар" sourceRef="V05" targetRef="V21" />
+    <bpmn:messageFlow id="02_voting_M06" name="Голос зараховано" sourceRef="V29" targetRef="V07" />
+    <bpmn:messageFlow id="02_voting_M07" name="Коментар відхилено" sourceRef="V32" targetRef="V13" />
+    <bpmn:messageFlow id="02_voting_M08" name="Коментар на модерацію" sourceRef="V27" targetRef="P2_Mod" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_P2_User" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P2_User">
+      <bpmn:lane id="L2_User" name="Користувач">
+        <bpmn:flowNodeRef>V01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V06</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V09</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V14</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="V01" name="Натиснуто голосувати">
+      <bpmn:outgoing>02_voting_F01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="V02" name="Надіслати запит голосування">
+      <bpmn:incoming>02_voting_F01</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F02</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="V03" name="Голосування дозволено?" eventGatewayType="Exclusive" instantiate="false" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F02</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F03</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F08</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F21</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="V04" name="Голосування дозволено">
+      <bpmn:incoming>02_voting_F03</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F04</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V04_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sendTask id="V05" name="Обрати оцінку і надіслати коментар">
+      <bpmn:incoming>02_voting_F04</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F05</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="V06" name="Результат голосування?" eventGatewayType="Exclusive" instantiate="false" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F05</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F06</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F11</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="V07" name="Голос зараховано">
+      <bpmn:incoming>02_voting_F06</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F07</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V07_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="V08" name="Голос зараховано">
+      <bpmn:incoming>02_voting_F07</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="V09" name="Не авторизовано">
+      <bpmn:incoming>02_voting_F08</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F09</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V09_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="V10" name="Не авторизовано">
+      <bpmn:incoming>02_voting_F09</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="V11" name="Повторний голос відхилено">
+      <bpmn:outgoing>02_voting_F10</bpmn:outgoing>
+      <bpmn:incoming>02_voting_F21</bpmn:incoming>
+      <bpmn:messageEventDefinition id="V11_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="V12" name="Повторний голос відхилено">
+      <bpmn:incoming>02_voting_F10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="V13" name="Коментар відхилено">
+      <bpmn:incoming>02_voting_F11</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F12</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V13_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="V14" name="Коментар відхилено">
+      <bpmn:incoming>02_voting_F12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="02_voting_F01" sourceRef="V01" targetRef="V02" name="" />
+    <bpmn:sequenceFlow id="02_voting_F02" sourceRef="V02" targetRef="V03" name="" />
+    <bpmn:sequenceFlow id="02_voting_F03" sourceRef="V03" targetRef="V04" name="" />
+    <bpmn:sequenceFlow id="02_voting_F04" sourceRef="V04" targetRef="V05" name="" />
+    <bpmn:sequenceFlow id="02_voting_F05" sourceRef="V05" targetRef="V06" name="" />
+    <bpmn:sequenceFlow id="02_voting_F06" sourceRef="V06" targetRef="V07" name="" />
+    <bpmn:sequenceFlow id="02_voting_F07" sourceRef="V07" targetRef="V08" name="" />
+    <bpmn:sequenceFlow id="02_voting_F08" sourceRef="V03" targetRef="V09" name="" />
+    <bpmn:sequenceFlow id="02_voting_F09" sourceRef="V09" targetRef="V10" name="" />
+    <bpmn:sequenceFlow id="02_voting_F10" sourceRef="V11" targetRef="V12" name="" />
+    <bpmn:sequenceFlow id="02_voting_F11" sourceRef="V06" targetRef="V13" name="" />
+    <bpmn:sequenceFlow id="02_voting_F12" sourceRef="V13" targetRef="V14" name="" />
+    <bpmn:sequenceFlow id="02_voting_F21" sourceRef="V03" targetRef="V11" name="" />
+  </bpmn:process>
+  <bpmn:process id="Proc_P2_Auto" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P2_Auto">
+      <bpmn:lane id="L2_System" name="Система">
+        <bpmn:flowNodeRef>V15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V22</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V23</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V25</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V26</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V27</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V28</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V29</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V30</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V31</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>V32</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="V15" name="Запит голосування отримано">
+      <bpmn:outgoing>02_voting_F13</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V15_Message" />
+    </bpmn:startEvent>
+    <bpmn:task id="V16" name="Перевірити авторизацію">
+      <bpmn:incoming>02_voting_F13</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F14</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="V17" name="Авторизовано?" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F14</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F22</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F23</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="V18" name="Перевірити попередній голос">
+      <bpmn:outgoing>02_voting_F15</bpmn:outgoing>
+      <bpmn:incoming>02_voting_F22</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="V19" name="Голос уже існує?" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F15</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F24</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="V20" name="Дозволити введення голосу">
+      <bpmn:outgoing>02_voting_F16</bpmn:outgoing>
+      <bpmn:incoming>02_voting_F24</bpmn:incoming>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="V21" name="Оцінку і коментар отримано">
+      <bpmn:incoming>02_voting_F16</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F17</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="V21_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="V22" name="Перевірити довжину і стоп-слова">
+      <bpmn:incoming>02_voting_F17</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F18</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="V23" name="Коментар валідний?" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F18</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F26</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F27</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="V24" name="Зберегти голос">
+      <bpmn:outgoing>02_voting_F19</bpmn:outgoing>
+      <bpmn:incoming>02_voting_F26</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:parallelGateway id="V25" name="Паралельні дії" gatewayDirection="Diverging">
+      <bpmn:incoming>02_voting_F19</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F28</bpmn:outgoing>
+      <bpmn:outgoing>02_voting_F29</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:subProcess id="V26" name="Перерахувати рейтинг моделі і марки">
+      <bpmn:incoming>02_voting_F28</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F30</bpmn:outgoing>
+      <bpmn:startEvent id="V26_Start" />
+      <bpmn:task id="V26_Task1" name="Перерахувати рейтинг моделі" />
+      <bpmn:task id="V26_Task2" name="Перерахувати рейтинг марки" />
+      <bpmn:endEvent id="V26_End" />
+      <bpmn:sequenceFlow id="V26_Inner1" sourceRef="V26_Start" targetRef="V26_Task1" />
+      <bpmn:sequenceFlow id="V26_Inner2" sourceRef="V26_Task1" targetRef="V26_Task2" />
+      <bpmn:sequenceFlow id="V26_Inner3" sourceRef="V26_Task2" targetRef="V26_End" />
+    </bpmn:subProcess>
+    <bpmn:sendTask id="V27" name="Додати коментар у чергу модерації">
+      <bpmn:incoming>02_voting_F29</bpmn:incoming>
+      <bpmn:outgoing>02_voting_F31</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:parallelGateway id="V28" name="Обидві дії завершено" gatewayDirection="Converging">
+      <bpmn:outgoing>02_voting_F20</bpmn:outgoing>
+      <bpmn:incoming>02_voting_F30</bpmn:incoming>
+      <bpmn:incoming>02_voting_F31</bpmn:incoming>
+    </bpmn:parallelGateway>
+    <bpmn:endEvent id="V29" name="Голос зараховано">
+      <bpmn:incoming>02_voting_F20</bpmn:incoming>
+      <bpmn:messageEventDefinition id="V29_Message" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="V30" name="Не авторизовано">
+      <bpmn:incoming>02_voting_F23</bpmn:incoming>
+      <bpmn:messageEventDefinition id="V30_Message" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="V31" name="Повторний голос відхилено">
+      <bpmn:incoming>02_voting_F25</bpmn:incoming>
+      <bpmn:messageEventDefinition id="V31_Message" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="V32" name="Коментар відхилено">
+      <bpmn:incoming>02_voting_F27</bpmn:incoming>
+      <bpmn:messageEventDefinition id="V32_Message" />
+    </bpmn:endEvent>
+    <bpmn:dataStoreReference id="V33" name="Голоси" dataStoreRef="V33_Store" />
+    <bpmn:dataObject id="V34_Object" />
+    <bpmn:dataObjectReference id="V34" name="Коментар" dataObjectRef="V34_Object" />
+    <bpmn:textAnnotation id="V35">
+      <bpmn:text>Поточний процес за легендою. Репутація та рейтинг тижня описані в беклозі нової функції.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:sequenceFlow id="02_voting_F13" sourceRef="V15" targetRef="V16" name="" />
+    <bpmn:sequenceFlow id="02_voting_F14" sourceRef="V16" targetRef="V17" name="" />
+    <bpmn:sequenceFlow id="02_voting_F15" sourceRef="V18" targetRef="V19" name="" />
+    <bpmn:sequenceFlow id="02_voting_F16" sourceRef="V20" targetRef="V21" name="" />
+    <bpmn:sequenceFlow id="02_voting_F17" sourceRef="V21" targetRef="V22" name="" />
+    <bpmn:sequenceFlow id="02_voting_F18" sourceRef="V22" targetRef="V23" name="" />
+    <bpmn:sequenceFlow id="02_voting_F19" sourceRef="V24" targetRef="V25" name="" />
+    <bpmn:sequenceFlow id="02_voting_F20" sourceRef="V28" targetRef="V29" name="" />
+    <bpmn:sequenceFlow id="02_voting_F22" sourceRef="V17" targetRef="V18" name="Так">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Так</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F23" sourceRef="V17" targetRef="V30" name="Ні">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Ні</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F24" sourceRef="V19" targetRef="V20" name="Ні">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Ні</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F25" sourceRef="V19" targetRef="V31" name="Так">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Так</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F26" sourceRef="V23" targetRef="V24" name="Так">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Так</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F27" sourceRef="V23" targetRef="V32" name="Ні">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Ні</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="02_voting_F28" sourceRef="V25" targetRef="V26" name="" />
+    <bpmn:sequenceFlow id="02_voting_F29" sourceRef="V25" targetRef="V27" name="" />
+    <bpmn:sequenceFlow id="02_voting_F30" sourceRef="V26" targetRef="V28" name="" />
+    <bpmn:sequenceFlow id="02_voting_F31" sourceRef="V27" targetRef="V28" name="" />
+    <bpmn:association id="02_voting_A01" sourceRef="V18" targetRef="V33" associationDirection="None" />
+    <bpmn:association id="02_voting_A02" sourceRef="V24" targetRef="V33" associationDirection="None" />
+    <bpmn:association id="02_voting_A03" sourceRef="V22" targetRef="V34" associationDirection="None" />
+    <bpmn:association id="02_voting_A04" sourceRef="V35" targetRef="V16" associationDirection="None" />
+  </bpmn:process>
+  <bpmn:dataStore id="V33_Store" name="Голоси" />
+  <bpmndi:BPMNDiagram id="Diagram_02_voting">
+    <bpmndi:BPMNPlane id="Plane_02_voting" bpmnElement="Coll_02_voting">
+      <bpmndi:BPMNShape id="P2_User_DI" bpmnElement="P2_User" isHorizontal="true">
+        <dc:Bounds x="20" y="70" width="2430" height="420" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L2_User_DI" bpmnElement="L2_User" isHorizontal="true">
+        <dc:Bounds x="50" y="70" width="2400" height="420" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P2_Auto_DI" bpmnElement="P2_Auto" isHorizontal="true">
+        <dc:Bounds x="20" y="545" width="2430" height="650" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L2_System_DI" bpmnElement="L2_System" isHorizontal="true">
+        <dc:Bounds x="50" y="545" width="2400" height="650" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P2_Mod_DI" bpmnElement="P2_Mod" isHorizontal="true">
+        <dc:Bounds x="20" y="1260" width="2430" height="112" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V01_DI" bpmnElement="V01">
+        <dc:Bounds x="125" y="125" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="173" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V02_DI" bpmnElement="V02">
+        <dc:Bounds x="235" y="102" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V03_DI" bpmnElement="V03">
+        <dc:Bounds x="495" y="119" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="441.0" y="179" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V04_DI" bpmnElement="V04">
+        <dc:Bounds x="690" y="125" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636.0" y="173" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V05_DI" bpmnElement="V05">
+        <dc:Bounds x="900" y="102" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V06_DI" bpmnElement="V06">
+        <dc:Bounds x="1170" y="119" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1116.0" y="179" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V07_DI" bpmnElement="V07">
+        <dc:Bounds x="1400" y="125" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1346.0" y="173" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V08_DI" bpmnElement="V08">
+        <dc:Bounds x="1650" y="125" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1596.0" y="173" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V09_DI" bpmnElement="V09">
+        <dc:Bounds x="690" y="285" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636.0" y="333" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V10_DI" bpmnElement="V10">
+        <dc:Bounds x="900" y="285" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="846.0" y="333" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V11_DI" bpmnElement="V11">
+        <dc:Bounds x="1050" y="385" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="996.0" y="433" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V12_DI" bpmnElement="V12">
+        <dc:Bounds x="1600" y="385" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1546.0" y="433" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V13_DI" bpmnElement="V13">
+        <dc:Bounds x="1400" y="310" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1346.0" y="358" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V14_DI" bpmnElement="V14">
+        <dc:Bounds x="1650" y="310" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1596.0" y="358" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V15_DI" bpmnElement="V15">
+        <dc:Bounds x="125" y="635" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="683" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V16_DI" bpmnElement="V16">
+        <dc:Bounds x="235" y="612" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V17_DI" bpmnElement="V17">
+        <dc:Bounds x="495" y="629" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="441.0" y="689" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V18_DI" bpmnElement="V18">
+        <dc:Bounds x="690" y="612" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V19_DI" bpmnElement="V19">
+        <dc:Bounds x="945" y="629" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="891.0" y="689" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V20_DI" bpmnElement="V20">
+        <dc:Bounds x="1100" y="612" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V21_DI" bpmnElement="V21">
+        <dc:Bounds x="1370" y="635" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1316.0" y="683" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V22_DI" bpmnElement="V22">
+        <dc:Bounds x="1490" y="612" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V23_DI" bpmnElement="V23">
+        <dc:Bounds x="1750" y="629" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1696.0" y="689" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V24_DI" bpmnElement="V24">
+        <dc:Bounds x="1920" y="612" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V25_DI" bpmnElement="V25">
+        <dc:Bounds x="2170" y="629" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2116.0" y="689" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V26_DI" bpmnElement="V26" isExpanded="false">
+        <dc:Bounds x="1960" y="820" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V27_DI" bpmnElement="V27">
+        <dc:Bounds x="2180" y="820" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V28_DI" bpmnElement="V28">
+        <dc:Bounds x="2160" y="995" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2106.0" y="1055" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V29_DI" bpmnElement="V29">
+        <dc:Bounds x="2360" y="1001" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2306.0" y="1049" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V30_DI" bpmnElement="V30">
+        <dc:Bounds x="690" y="995" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="636.0" y="1043" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V31_DI" bpmnElement="V31">
+        <dc:Bounds x="1100" y="995" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046.0" y="1043" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V32_DI" bpmnElement="V32">
+        <dc:Bounds x="1650" y="995" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1596.0" y="1043" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V33_DI" bpmnElement="V33">
+        <dc:Bounds x="1340" y="825" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1286.0" y="899" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V34_DI" bpmnElement="V34">
+        <dc:Bounds x="1550" y="825" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1496.0" y="899" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="V35_DI" bpmnElement="V35">
+        <dc:Bounds x="130" y="1090" width="510" height="75" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="02_voting_F01_DI" bpmnElement="02_voting_F01">
+        <di:waypoint x="169" y="147.0" />
+        <di:waypoint x="235" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F02_DI" bpmnElement="02_voting_F02">
+        <di:waypoint x="405" y="147.0" />
+        <di:waypoint x="495" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F03_DI" bpmnElement="02_voting_F03">
+        <di:waypoint x="551" y="147.0" />
+        <di:waypoint x="690" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F04_DI" bpmnElement="02_voting_F04">
+        <di:waypoint x="734" y="147.0" />
+        <di:waypoint x="900" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F05_DI" bpmnElement="02_voting_F05">
+        <di:waypoint x="1070" y="147.0" />
+        <di:waypoint x="1170" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F06_DI" bpmnElement="02_voting_F06">
+        <di:waypoint x="1226" y="147.0" />
+        <di:waypoint x="1400" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F07_DI" bpmnElement="02_voting_F07">
+        <di:waypoint x="1444" y="147.0" />
+        <di:waypoint x="1650" y="147.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F08_DI" bpmnElement="02_voting_F08">
+        <di:waypoint x="551" y="147.0" />
+        <di:waypoint x="620.5" y="147.0" />
+        <di:waypoint x="620.5" y="307.0" />
+        <di:waypoint x="690" y="307.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F09_DI" bpmnElement="02_voting_F09">
+        <di:waypoint x="734" y="307.0" />
+        <di:waypoint x="900" y="307.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F10_DI" bpmnElement="02_voting_F10">
+        <di:waypoint x="1094" y="407.0" />
+        <di:waypoint x="1600" y="407.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F11_DI" bpmnElement="02_voting_F11">
+        <di:waypoint x="1226" y="147.0" />
+        <di:waypoint x="1313.0" y="147.0" />
+        <di:waypoint x="1313.0" y="332.0" />
+        <di:waypoint x="1400" y="332.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F12_DI" bpmnElement="02_voting_F12">
+        <di:waypoint x="1444" y="332.0" />
+        <di:waypoint x="1650" y="332.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F13_DI" bpmnElement="02_voting_F13">
+        <di:waypoint x="169" y="657.0" />
+        <di:waypoint x="235" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F14_DI" bpmnElement="02_voting_F14">
+        <di:waypoint x="405" y="657.0" />
+        <di:waypoint x="495" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F15_DI" bpmnElement="02_voting_F15">
+        <di:waypoint x="860" y="657.0" />
+        <di:waypoint x="945" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F16_DI" bpmnElement="02_voting_F16">
+        <di:waypoint x="1270" y="657.0" />
+        <di:waypoint x="1370" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F17_DI" bpmnElement="02_voting_F17">
+        <di:waypoint x="1414" y="657.0" />
+        <di:waypoint x="1490" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F18_DI" bpmnElement="02_voting_F18">
+        <di:waypoint x="1660" y="657.0" />
+        <di:waypoint x="1750" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F19_DI" bpmnElement="02_voting_F19">
+        <di:waypoint x="2090" y="657.0" />
+        <di:waypoint x="2170" y="657.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F20_DI" bpmnElement="02_voting_F20">
+        <di:waypoint x="2216" y="1023.0" />
+        <di:waypoint x="2360" y="1023.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F21_DI" bpmnElement="02_voting_F21">
+        <di:waypoint x="523" y="175" />
+        <di:waypoint x="523" y="407" />
+        <di:waypoint x="1050" y="407" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F22_DI" bpmnElement="02_voting_F22">
+        <di:waypoint x="551" y="657.0" />
+        <di:waypoint x="690" y="657.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="500.5" y="628.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F23_DI" bpmnElement="02_voting_F23">
+        <di:waypoint x="523" y="685" />
+        <di:waypoint x="523" y="1017" />
+        <di:waypoint x="690" y="1017" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="403.0" y="822.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F24_DI" bpmnElement="02_voting_F24">
+        <di:waypoint x="1001" y="657.0" />
+        <di:waypoint x="1100" y="657.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="930.5" y="628.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F25_DI" bpmnElement="02_voting_F25">
+        <di:waypoint x="973" y="685" />
+        <di:waypoint x="973" y="1017" />
+        <di:waypoint x="1100" y="1017" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="853.0" y="822.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F26_DI" bpmnElement="02_voting_F26">
+        <di:waypoint x="1806" y="657.0" />
+        <di:waypoint x="1920" y="657.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1743.0" y="628.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F27_DI" bpmnElement="02_voting_F27">
+        <di:waypoint x="1778" y="685" />
+        <di:waypoint x="1778" y="1017" />
+        <di:waypoint x="1694" y="1017" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1658.0" y="822.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F28_DI" bpmnElement="02_voting_F28">
+        <di:waypoint x="2198" y="685" />
+        <di:waypoint x="2198" y="760" />
+        <di:waypoint x="2045" y="760" />
+        <di:waypoint x="2045" y="820" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F29_DI" bpmnElement="02_voting_F29">
+        <di:waypoint x="2226" y="657" />
+        <di:waypoint x="2280" y="657" />
+        <di:waypoint x="2280" y="770" />
+        <di:waypoint x="2265" y="770" />
+        <di:waypoint x="2265" y="820" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F30_DI" bpmnElement="02_voting_F30">
+        <di:waypoint x="2045" y="910" />
+        <di:waypoint x="2045" y="1023" />
+        <di:waypoint x="2160" y="1023" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_F31_DI" bpmnElement="02_voting_F31">
+        <di:waypoint x="2265" y="910" />
+        <di:waypoint x="2265" y="950" />
+        <di:waypoint x="2188" y="950" />
+        <di:waypoint x="2188" y="995" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M01_DI" bpmnElement="02_voting_M01">
+        <di:waypoint x="320" y="192" />
+        <di:waypoint x="320" y="520" />
+        <di:waypoint x="147" y="520" />
+        <di:waypoint x="147" y="635" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="200.0" y="327.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M02_DI" bpmnElement="02_voting_M02">
+        <di:waypoint x="1185" y="612" />
+        <di:waypoint x="1185" y="520" />
+        <di:waypoint x="810" y="520" />
+        <di:waypoint x="810" y="90" />
+        <di:waypoint x="712" y="90" />
+        <di:waypoint x="712" y="125" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1065.0" y="537.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M03_DI" bpmnElement="02_voting_M03">
+        <di:waypoint x="690" y="1017" />
+        <di:waypoint x="600" y="1017" />
+        <di:waypoint x="600" y="520" />
+        <di:waypoint x="600" y="255" />
+        <di:waypoint x="712" y="255" />
+        <di:waypoint x="712" y="285" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="525.0" y="988.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M04_DI" bpmnElement="02_voting_M04">
+        <di:waypoint x="1144" y="1017" />
+        <di:waypoint x="1300" y="1017" />
+        <di:waypoint x="1300" y="520" />
+        <di:waypoint x="1200" y="520" />
+        <di:waypoint x="1200" y="360" />
+        <di:waypoint x="1072" y="360" />
+        <di:waypoint x="1072" y="385" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1102.0" y="988.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M05_DI" bpmnElement="02_voting_M05">
+        <di:waypoint x="985" y="192" />
+        <di:waypoint x="985" y="245" />
+        <di:waypoint x="1850" y="245" />
+        <di:waypoint x="1850" y="520" />
+        <di:waypoint x="1392" y="520" />
+        <di:waypoint x="1392" y="635" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="865.0" y="189.5" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M06_DI" bpmnElement="02_voting_M06">
+        <di:waypoint x="2382" y="1001" />
+        <di:waypoint x="2382" y="515" />
+        <di:waypoint x="1810" y="515" />
+        <di:waypoint x="1810" y="90" />
+        <di:waypoint x="1422" y="90" />
+        <di:waypoint x="1422" y="125" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2262.0" y="729.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M07_DI" bpmnElement="02_voting_M07">
+        <di:waypoint x="1694" y="1017" />
+        <di:waypoint x="1880" y="1017" />
+        <di:waypoint x="1880" y="520" />
+        <di:waypoint x="1790" y="520" />
+        <di:waypoint x="1790" y="285" />
+        <di:waypoint x="1422" y="285" />
+        <di:waypoint x="1422" y="310" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1667.0" y="988.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_M08_DI" bpmnElement="02_voting_M08">
+        <di:waypoint x="2350" y="865" />
+        <di:waypoint x="2490" y="865" />
+        <di:waypoint x="2490" y="1306" />
+        <di:waypoint x="2450" y="1306" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2300.0" y="836.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_A01_DI" bpmnElement="02_voting_A01">
+        <di:waypoint x="860" y="657.0" />
+        <di:waypoint x="1100.0" y="657.0" />
+        <di:waypoint x="1100.0" y="860.0" />
+        <di:waypoint x="1340" y="860.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_A02_DI" bpmnElement="02_voting_A02">
+        <di:waypoint x="2005" y="702" />
+        <di:waypoint x="2005" y="765" />
+        <di:waypoint x="1369" y="765" />
+        <di:waypoint x="1369" y="825" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_A03_DI" bpmnElement="02_voting_A03">
+        <di:waypoint x="1575.0" y="702" />
+        <di:waypoint x="1575.0" y="763.5" />
+        <di:waypoint x="1579.0" y="763.5" />
+        <di:waypoint x="1579.0" y="825" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="02_voting_A04_DI" bpmnElement="02_voting_A04">
+        <di:waypoint x="385.0" y="1090" />
+        <di:waypoint x="385.0" y="896.0" />
+        <di:waypoint x="320.0" y="896.0" />
+        <di:waypoint x="320.0" y="702" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

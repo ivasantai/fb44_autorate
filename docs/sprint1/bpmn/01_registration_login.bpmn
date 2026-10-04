@@ -1,0 +1,672 @@
+<?xml version='1.0' encoding='utf-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Def_01_registration_login" targetNamespace="https://autorate.example/bpmn" exporter="AutoRate QA BPMN XML" exporterVersion="1.0">
+  <bpmn:documentation>Продукт: АвтоРейт (П5). Спринт: 1. Дата підготовки: 16.09.2026. Команда: AutoRate QA.
+Автори: Асташов Іван, Кінаш Єгор, Рушай Євген, Дарина Поломарьова.
+Реєстрація і вхід</bpmn:documentation>
+  <bpmn:collaboration id="Coll_01_registration_login">
+    <bpmn:participant id="P1_User" name="Відвідувач" processRef="Proc_P1_User" />
+    <bpmn:participant id="P1_Auto" name="АвтоРейт" processRef="Proc_P1_Auto" />
+    <bpmn:messageFlow id="01_registration_login_M01" name="Дані реєстрації" sourceRef="R02" targetRef="R15" />
+    <bpmn:messageFlow id="01_registration_login_M02" name="Реєстрацію прийнято" sourceRef="R18" targetRef="R04" />
+    <bpmn:messageFlow id="01_registration_login_M03" name="Помилка реєстрації" sourceRef="R24" targetRef="R13" />
+    <bpmn:messageFlow id="01_registration_login_M04" name="Дані входу" sourceRef="R05" targetRef="R19" />
+    <bpmn:messageFlow id="01_registration_login_M05" name="Вхід успішний" sourceRef="R23" targetRef="R07" />
+    <bpmn:messageFlow id="01_registration_login_M06" name="Невірні дані" sourceRef="R25" targetRef="R09" />
+    <bpmn:messageFlow id="01_registration_login_M07" name="Блокування" sourceRef="R27" targetRef="R11" />
+  </bpmn:collaboration>
+  <bpmn:process id="Proc_P1_User" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P1_User">
+      <bpmn:lane id="L1_User" name="Відвідувач">
+        <bpmn:flowNodeRef>R01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R06</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R09</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R14</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="R01" name="Натиснуто реєстрацію">
+      <bpmn:outgoing>01_registration_login_F01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sendTask id="R02" name="Ввести та надіслати дані реєстрації">
+      <bpmn:incoming>01_registration_login_F01</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F02</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="R03" name="Відповідь на реєстрацію?" eventGatewayType="Exclusive" instantiate="false" gatewayDirection="Diverging">
+      <bpmn:incoming>01_registration_login_F02</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F03</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F11</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="R04" name="Реєстрацію прийнято">
+      <bpmn:incoming>01_registration_login_F03</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F04</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R04_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sendTask id="R05" name="Ввести та надіслати логін і пароль">
+      <bpmn:incoming>01_registration_login_F04</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F05</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:eventBasedGateway id="R06" name="Відповідь на вхід?" eventGatewayType="Exclusive" instantiate="false" gatewayDirection="Diverging">
+      <bpmn:incoming>01_registration_login_F05</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F06</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F08</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F23</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="R07" name="Сесію відкрито">
+      <bpmn:incoming>01_registration_login_F06</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F07</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R07_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="R08" name="Користувач увійшов">
+      <bpmn:incoming>01_registration_login_F07</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="R09" name="Невірні облікові дані">
+      <bpmn:incoming>01_registration_login_F08</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F09</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R09_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="R10" name="Вхід відхилено">
+      <bpmn:incoming>01_registration_login_F09</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="R11" name="Вхід тимчасово заблоковано">
+      <bpmn:outgoing>01_registration_login_F10</bpmn:outgoing>
+      <bpmn:incoming>01_registration_login_F23</bpmn:incoming>
+      <bpmn:messageEventDefinition id="R11_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="R12" name="Очікується зняття блокування">
+      <bpmn:incoming>01_registration_login_F10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="R13" name="Реєстрацію відхилено">
+      <bpmn:incoming>01_registration_login_F11</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F12</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R13_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="R14" name="Реєстрацію відхилено">
+      <bpmn:incoming>01_registration_login_F12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="01_registration_login_F01" sourceRef="R01" targetRef="R02" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F02" sourceRef="R02" targetRef="R03" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F03" sourceRef="R03" targetRef="R04" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F04" sourceRef="R04" targetRef="R05" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F05" sourceRef="R05" targetRef="R06" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F06" sourceRef="R06" targetRef="R07" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F07" sourceRef="R07" targetRef="R08" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F08" sourceRef="R06" targetRef="R09" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F09" sourceRef="R09" targetRef="R10" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F10" sourceRef="R11" targetRef="R12" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F11" sourceRef="R03" targetRef="R13" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F12" sourceRef="R13" targetRef="R14" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F23" sourceRef="R06" targetRef="R11" name="" />
+  </bpmn:process>
+  <bpmn:process id="Proc_P1_Auto" isExecutable="false">
+    <bpmn:laneSet id="Lanes_P1_Auto">
+      <bpmn:lane id="L1_System" name="Система">
+        <bpmn:flowNodeRef>R15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R19</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R22</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R23</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R25</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R26</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R27</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R28</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R29</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>R30</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="R15" name="Дані реєстрації отримано">
+      <bpmn:outgoing>01_registration_login_F13</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R15_Message" />
+    </bpmn:startEvent>
+    <bpmn:subProcess id="R16" name="Перевірити дані реєстрації">
+      <bpmn:incoming>01_registration_login_F13</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F14</bpmn:outgoing>
+      <bpmn:startEvent id="R16_Start" />
+      <bpmn:task id="R16_Task1" name="Перевірити унікальність логіна" />
+      <bpmn:task id="R16_Task2" name="Перевірити збіг паролів" />
+      <bpmn:task id="R16_Task3" name="Перевірити складність пароля" />
+      <bpmn:endEvent id="R16_End" />
+      <bpmn:sequenceFlow id="R16_Inner1" sourceRef="R16_Start" targetRef="R16_Task1" />
+      <bpmn:sequenceFlow id="R16_Inner2" sourceRef="R16_Task1" targetRef="R16_Task2" />
+      <bpmn:sequenceFlow id="R16_Inner3" sourceRef="R16_Task2" targetRef="R16_Task3" />
+      <bpmn:sequenceFlow id="R16_Inner4" sourceRef="R16_Task3" targetRef="R16_End" />
+    </bpmn:subProcess>
+    <bpmn:exclusiveGateway id="R17" name="Дані валідні?" gatewayDirection="Diverging">
+      <bpmn:incoming>01_registration_login_F14</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F24</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F25</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="R18" name="Створити обліковий запис і підтвердити">
+      <bpmn:outgoing>01_registration_login_F15</bpmn:outgoing>
+      <bpmn:incoming>01_registration_login_F24</bpmn:incoming>
+    </bpmn:sendTask>
+    <bpmn:intermediateCatchEvent id="R19" name="Дані входу отримано">
+      <bpmn:incoming>01_registration_login_F15</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F16</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R19_Message" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="R20" name="Перевірити облікові дані і ліміт спроб">
+      <bpmn:incoming>01_registration_login_F16</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F17</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="R21" name="Результат перевірки входу?" gatewayDirection="Diverging">
+      <bpmn:documentation>R20 повертає рівно один результат: Успішно, Відмова або Блокування. Відмова означає невірні дані без чинного блокування; Блокування означає чинну заборону або досягнутий ліміт спроб.</bpmn:documentation>
+      <bpmn:incoming>01_registration_login_F17</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F26</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F27</bpmn:outgoing>
+      <bpmn:outgoing>01_registration_login_F28</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="R22" name="Відкрити сесію і показати профіль">
+      <bpmn:outgoing>01_registration_login_F18</bpmn:outgoing>
+      <bpmn:incoming>01_registration_login_F26</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:endEvent id="R23" name="Сесію відкрито">
+      <bpmn:incoming>01_registration_login_F18</bpmn:incoming>
+      <bpmn:messageEventDefinition id="R23_Message" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="R24" name="Реєстрацію відхилено">
+      <bpmn:incoming>01_registration_login_F25</bpmn:incoming>
+      <bpmn:messageEventDefinition id="R24_Message" />
+    </bpmn:endEvent>
+    <bpmn:endEvent id="R25" name="Невірні облікові дані">
+      <bpmn:incoming>01_registration_login_F27</bpmn:incoming>
+      <bpmn:messageEventDefinition id="R25_Message" />
+    </bpmn:endEvent>
+    <bpmn:task id="R26" name="Зберегти строк блокування">
+      <bpmn:outgoing>01_registration_login_F19</bpmn:outgoing>
+      <bpmn:incoming>01_registration_login_F28</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:intermediateThrowEvent id="R27" name="Блокування повідомлено">
+      <bpmn:incoming>01_registration_login_F19</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F20</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="R27_Message" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateCatchEvent id="R28" name="Строк блокування минув">
+      <bpmn:incoming>01_registration_login_F20</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F21</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="R28_Timer">
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">blockedUntil</bpmn:timeDate>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="R29" name="Зняти блокування входу">
+      <bpmn:incoming>01_registration_login_F21</bpmn:incoming>
+      <bpmn:outgoing>01_registration_login_F22</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="R30" name="Вхід знову дозволено">
+      <bpmn:incoming>01_registration_login_F22</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:dataObject id="R31_Object" />
+    <bpmn:dataObjectReference id="R31" name="Реєстраційні дані" dataObjectRef="R31_Object" />
+    <bpmn:dataStoreReference id="R32" name="Облікові записи" dataStoreRef="R32_Store" />
+    <bpmn:textAnnotation id="R33">
+      <bpmn:text>Унікальність логіна, збіг і складність пароля. Ліміт спроб і строк блокування - за SRS.</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:sequenceFlow id="01_registration_login_F13" sourceRef="R15" targetRef="R16" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F14" sourceRef="R16" targetRef="R17" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F15" sourceRef="R18" targetRef="R19" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F16" sourceRef="R19" targetRef="R20" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F17" sourceRef="R20" targetRef="R21" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F18" sourceRef="R22" targetRef="R23" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F19" sourceRef="R26" targetRef="R27" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F20" sourceRef="R27" targetRef="R28" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F21" sourceRef="R28" targetRef="R29" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F22" sourceRef="R29" targetRef="R30" name="" />
+    <bpmn:sequenceFlow id="01_registration_login_F24" sourceRef="R17" targetRef="R18" name="Так">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Так</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="01_registration_login_F25" sourceRef="R17" targetRef="R24" name="Ні">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Ні</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="01_registration_login_F26" sourceRef="R21" targetRef="R22" name="Успішно">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Успішно</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="01_registration_login_F27" sourceRef="R21" targetRef="R25" name="Відмова">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Відмова</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="01_registration_login_F28" sourceRef="R21" targetRef="R26" name="Блокування">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">Блокування</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:association id="01_registration_login_A01" sourceRef="R16" targetRef="R31" associationDirection="None" />
+    <bpmn:association id="01_registration_login_A02" sourceRef="R18" targetRef="R32" associationDirection="None" />
+    <bpmn:association id="01_registration_login_A03" sourceRef="R33" targetRef="R16" associationDirection="None" />
+  </bpmn:process>
+  <bpmn:dataStore id="R32_Store" name="Облікові записи" />
+  <bpmndi:BPMNDiagram id="Diagram_01_registration_login">
+    <bpmndi:BPMNPlane id="Plane_01_registration_login" bpmnElement="Coll_01_registration_login">
+      <bpmndi:BPMNShape id="P1_User_DI" bpmnElement="P1_User" isHorizontal="true">
+        <dc:Bounds x="20" y="70" width="2210" height="390" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L1_User_DI" bpmnElement="L1_User" isHorizontal="true">
+        <dc:Bounds x="50" y="70" width="2180" height="390" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="P1_Auto_DI" bpmnElement="P1_Auto" isHorizontal="true">
+        <dc:Bounds x="20" y="510" width="2210" height="590" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="L1_System_DI" bpmnElement="L1_System" isHorizontal="true">
+        <dc:Bounds x="50" y="510" width="2180" height="590" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R01_DI" bpmnElement="R01">
+        <dc:Bounds x="125" y="130" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="178" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R02_DI" bpmnElement="R02">
+        <dc:Bounds x="235" y="107" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R03_DI" bpmnElement="R03">
+        <dc:Bounds x="495" y="124" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="441.0" y="184" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R04_DI" bpmnElement="R04">
+        <dc:Bounds x="675" y="130" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621.0" y="178" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R05_DI" bpmnElement="R05">
+        <dc:Bounds x="815" y="107" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R06_DI" bpmnElement="R06">
+        <dc:Bounds x="1100" y="124" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1046.0" y="184" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R07_DI" bpmnElement="R07">
+        <dc:Bounds x="1310" y="100" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1256.0" y="148" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R08_DI" bpmnElement="R08">
+        <dc:Bounds x="1540" y="100" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1486.0" y="148" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R09_DI" bpmnElement="R09">
+        <dc:Bounds x="1310" y="242" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1256.0" y="290" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R10_DI" bpmnElement="R10">
+        <dc:Bounds x="1540" y="242" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1486.0" y="290" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R11_DI" bpmnElement="R11">
+        <dc:Bounds x="1730" y="300" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1676.0" y="348" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R12_DI" bpmnElement="R12">
+        <dc:Bounds x="1930" y="300" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1876.0" y="348" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R13_DI" bpmnElement="R13">
+        <dc:Bounds x="675" y="320" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621.0" y="368" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R14_DI" bpmnElement="R14">
+        <dc:Bounds x="940" y="320" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="886.0" y="368" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R15_DI" bpmnElement="R15">
+        <dc:Bounds x="125" y="610" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="71.0" y="658" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R16_DI" bpmnElement="R16" isExpanded="false">
+        <dc:Bounds x="235" y="587" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R17_DI" bpmnElement="R17">
+        <dc:Bounds x="495" y="604" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="441.0" y="664" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R18_DI" bpmnElement="R18">
+        <dc:Bounds x="675" y="587" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R19_DI" bpmnElement="R19">
+        <dc:Bounds x="940" y="610" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="886.0" y="658" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R20_DI" bpmnElement="R20">
+        <dc:Bounds x="1060" y="587" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R21_DI" bpmnElement="R21">
+        <dc:Bounds x="1310" y="604" width="56" height="56" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1256.0" y="664" width="164" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R22_DI" bpmnElement="R22">
+        <dc:Bounds x="1480" y="587" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R23_DI" bpmnElement="R23">
+        <dc:Bounds x="1760" y="610" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1706.0" y="658" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R24_DI" bpmnElement="R24">
+        <dc:Bounds x="675" y="860" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="621.0" y="908" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R25_DI" bpmnElement="R25">
+        <dc:Bounds x="1480" y="800" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1426.0" y="848" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R26_DI" bpmnElement="R26">
+        <dc:Bounds x="1310" y="955" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R27_DI" bpmnElement="R27">
+        <dc:Bounds x="1540" y="978" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1486.0" y="1026" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R28_DI" bpmnElement="R28">
+        <dc:Bounds x="1730" y="978" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1676.0" y="1026" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R29_DI" bpmnElement="R29">
+        <dc:Bounds x="1840" y="945" width="170" height="90" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R30_DI" bpmnElement="R30">
+        <dc:Bounds x="2070" y="978" width="44" height="44" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2016.0" y="1026" width="152" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R31_DI" bpmnElement="R31">
+        <dc:Bounds x="325" y="780" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="271.0" y="854" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R32_DI" bpmnElement="R32">
+        <dc:Bounds x="910" y="820" width="58" height="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="856.0" y="894" width="166" height="70" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="R33_DI" bpmnElement="R33">
+        <dc:Bounds x="105" y="960" width="350" height="95" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="01_registration_login_F01_DI" bpmnElement="01_registration_login_F01">
+        <di:waypoint x="169" y="152.0" />
+        <di:waypoint x="235" y="152.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F02_DI" bpmnElement="01_registration_login_F02">
+        <di:waypoint x="405" y="152.0" />
+        <di:waypoint x="495" y="152.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F03_DI" bpmnElement="01_registration_login_F03">
+        <di:waypoint x="551" y="152.0" />
+        <di:waypoint x="675" y="152.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F04_DI" bpmnElement="01_registration_login_F04">
+        <di:waypoint x="719" y="152.0" />
+        <di:waypoint x="815" y="152.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F05_DI" bpmnElement="01_registration_login_F05">
+        <di:waypoint x="985" y="152.0" />
+        <di:waypoint x="1100" y="152.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F06_DI" bpmnElement="01_registration_login_F06">
+        <di:waypoint x="1156" y="152.0" />
+        <di:waypoint x="1233.0" y="152.0" />
+        <di:waypoint x="1233.0" y="122.0" />
+        <di:waypoint x="1310" y="122.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F07_DI" bpmnElement="01_registration_login_F07">
+        <di:waypoint x="1354" y="122.0" />
+        <di:waypoint x="1540" y="122.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F08_DI" bpmnElement="01_registration_login_F08">
+        <di:waypoint x="1156" y="152.0" />
+        <di:waypoint x="1233.0" y="152.0" />
+        <di:waypoint x="1233.0" y="264.0" />
+        <di:waypoint x="1310" y="264.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F09_DI" bpmnElement="01_registration_login_F09">
+        <di:waypoint x="1354" y="264.0" />
+        <di:waypoint x="1540" y="264.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F10_DI" bpmnElement="01_registration_login_F10">
+        <di:waypoint x="1774" y="322.0" />
+        <di:waypoint x="1930" y="322.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F11_DI" bpmnElement="01_registration_login_F11">
+        <di:waypoint x="551" y="152.0" />
+        <di:waypoint x="613.0" y="152.0" />
+        <di:waypoint x="613.0" y="342.0" />
+        <di:waypoint x="675" y="342.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F12_DI" bpmnElement="01_registration_login_F12">
+        <di:waypoint x="719" y="342.0" />
+        <di:waypoint x="940" y="342.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F13_DI" bpmnElement="01_registration_login_F13">
+        <di:waypoint x="169" y="632.0" />
+        <di:waypoint x="235" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F14_DI" bpmnElement="01_registration_login_F14">
+        <di:waypoint x="405" y="632.0" />
+        <di:waypoint x="495" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F15_DI" bpmnElement="01_registration_login_F15">
+        <di:waypoint x="845" y="632.0" />
+        <di:waypoint x="940" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F16_DI" bpmnElement="01_registration_login_F16">
+        <di:waypoint x="984" y="632.0" />
+        <di:waypoint x="1060" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F17_DI" bpmnElement="01_registration_login_F17">
+        <di:waypoint x="1230" y="632.0" />
+        <di:waypoint x="1310" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F18_DI" bpmnElement="01_registration_login_F18">
+        <di:waypoint x="1650" y="632.0" />
+        <di:waypoint x="1760" y="632.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F19_DI" bpmnElement="01_registration_login_F19">
+        <di:waypoint x="1480" y="1000.0" />
+        <di:waypoint x="1540" y="1000.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F20_DI" bpmnElement="01_registration_login_F20">
+        <di:waypoint x="1584" y="1000.0" />
+        <di:waypoint x="1730" y="1000.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F21_DI" bpmnElement="01_registration_login_F21">
+        <di:waypoint x="1774" y="1000.0" />
+        <di:waypoint x="1807.0" y="1000.0" />
+        <di:waypoint x="1807.0" y="990.0" />
+        <di:waypoint x="1840" y="990.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F22_DI" bpmnElement="01_registration_login_F22">
+        <di:waypoint x="2010" y="990.0" />
+        <di:waypoint x="2040.0" y="990.0" />
+        <di:waypoint x="2040.0" y="1000.0" />
+        <di:waypoint x="2070" y="1000.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F23_DI" bpmnElement="01_registration_login_F23">
+        <di:waypoint x="1156" y="152" />
+        <di:waypoint x="1640" y="152" />
+        <di:waypoint x="1640" y="322" />
+        <di:waypoint x="1730" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F24_DI" bpmnElement="01_registration_login_F24">
+        <di:waypoint x="551" y="632.0" />
+        <di:waypoint x="675" y="632.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="493.0" y="603.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F25_DI" bpmnElement="01_registration_login_F25">
+        <di:waypoint x="523" y="660" />
+        <di:waypoint x="523" y="882" />
+        <di:waypoint x="675" y="882" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="403.0" y="742.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F26_DI" bpmnElement="01_registration_login_F26">
+        <di:waypoint x="1366" y="632.0" />
+        <di:waypoint x="1480" y="632.0" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1300" y="595" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F27_DI" bpmnElement="01_registration_login_F27">
+        <di:waypoint x="1366" y="632" />
+        <di:waypoint x="1410" y="632" />
+        <di:waypoint x="1410" y="822" />
+        <di:waypoint x="1480" y="822" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1350" y="735" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_F28_DI" bpmnElement="01_registration_login_F28">
+        <di:waypoint x="1338" y="660" />
+        <di:waypoint x="1338" y="910" />
+        <di:waypoint x="1395" y="910" />
+        <di:waypoint x="1395" y="955" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1280" y="920" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M01_DI" bpmnElement="01_registration_login_M01">
+        <di:waypoint x="320" y="197" />
+        <di:waypoint x="320" y="480" />
+        <di:waypoint x="147" y="480" />
+        <di:waypoint x="147" y="610" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="200.0" y="309.5" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M02_DI" bpmnElement="01_registration_login_M02">
+        <di:waypoint x="760" y="587" />
+        <di:waypoint x="760" y="490" />
+        <di:waypoint x="795" y="490" />
+        <di:waypoint x="795" y="80" />
+        <di:waypoint x="697" y="80" />
+        <di:waypoint x="697" y="130" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="640.0" y="509.5" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M03_DI" bpmnElement="01_registration_login_M03">
+        <di:waypoint x="675" y="882" />
+        <di:waypoint x="590" y="882" />
+        <di:waypoint x="590" y="285" />
+        <di:waypoint x="697" y="285" />
+        <di:waypoint x="697" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="512.5" y="853.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M04_DI" bpmnElement="01_registration_login_M04">
+        <di:waypoint x="900" y="197" />
+        <di:waypoint x="900" y="250" />
+        <di:waypoint x="1060" y="250" />
+        <di:waypoint x="1060" y="480" />
+        <di:waypoint x="962" y="480" />
+        <di:waypoint x="962" y="610" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="780.0" y="194.5" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M05_DI" bpmnElement="01_registration_login_M05">
+        <di:waypoint x="1782" y="610" />
+        <di:waypoint x="1782" y="500" />
+        <di:waypoint x="2180" y="500" />
+        <di:waypoint x="2180" y="80" />
+        <di:waypoint x="1332" y="80" />
+        <di:waypoint x="1332" y="100" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1662.0" y="526.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M06_DI" bpmnElement="01_registration_login_M06">
+        <di:waypoint x="1524" y="822" />
+        <di:waypoint x="1680" y="822" />
+        <di:waypoint x="1680" y="490" />
+        <di:waypoint x="1220" y="490" />
+        <di:waypoint x="1220" y="220" />
+        <di:waypoint x="1332" y="220" />
+        <di:waypoint x="1332" y="242" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1482.0" y="793.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_M07_DI" bpmnElement="01_registration_login_M07">
+        <di:waypoint x="1584" y="1000" />
+        <di:waypoint x="1660" y="1000" />
+        <di:waypoint x="1660" y="495" />
+        <di:waypoint x="1855" y="495" />
+        <di:waypoint x="1855" y="250" />
+        <di:waypoint x="1752" y="250" />
+        <di:waypoint x="1752" y="300" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1502.0" y="971.0" width="240" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_A01_DI" bpmnElement="01_registration_login_A01">
+        <di:waypoint x="320.0" y="677" />
+        <di:waypoint x="320.0" y="728.5" />
+        <di:waypoint x="354.0" y="728.5" />
+        <di:waypoint x="354.0" y="780" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_A02_DI" bpmnElement="01_registration_login_A02">
+        <di:waypoint x="845" y="632.0" />
+        <di:waypoint x="877.5" y="632.0" />
+        <di:waypoint x="877.5" y="855.0" />
+        <di:waypoint x="910" y="855.0" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="01_registration_login_A03_DI" bpmnElement="01_registration_login_A03">
+        <di:waypoint x="280.0" y="960" />
+        <di:waypoint x="280.0" y="818.5" />
+        <di:waypoint x="320.0" y="818.5" />
+        <di:waypoint x="320.0" y="677" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
